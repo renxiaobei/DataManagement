@@ -2,7 +2,7 @@
  * 读取配置文件
  */
 //var ip = "http://123.139.159.38:9218/YOTTA_RRQ"; 
-var ip = "http://localhost:8080/YOTTA_RRQ";
+var ip = "http://localhost:8080/Yotta";
 
 //杨宽设
 //var ip = "http://202.117.54.42:8080/YOTTA_RRQ";

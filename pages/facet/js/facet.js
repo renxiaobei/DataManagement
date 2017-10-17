@@ -27,7 +27,7 @@ var app=angular.module('myApp',[
     'ui.bootstrap'
 ]);
 app.controller('myCon',function($scope,$http){
-    $http.get(ip+'/DomainAPI/getDomain').success(function(response){
+    $http.get(ip+'/DomainAPI/getDomainManage').success(function(response){
         $scope.subjects=response;
         $scope.getTopic(getCookie("NowClass"));
         $scope.gettopicfacet(getCookie("NowClass"),getCookie("NowTopic"));

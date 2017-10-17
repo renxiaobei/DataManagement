@@ -19,7 +19,7 @@ $(document).ready(function(){
 
 var app=angular.module('myApp',[]);
 app.controller('myCon',function($scope,$http){
-    $http.get(ip+'/DomainAPI/getDomain').success(function(response){
+    $http.get(ip+'/DomainAPI/getDomainManage').success(function(response){
         $scope.kechengs=response;
     });
     $http.get(ip+'/DomainAPI/countClassNum').success(function(response){
@@ -42,25 +42,13 @@ app.controller('myCon',function($scope,$http){
     $scope.showClass=function(){
         $http({
             method:'GET',
-            url:ip+"/DomainAPI/getDomain"
+            url:ip+"/DomainAPI/getDomainManage"
         }).then(function successCallback(response){
             //console.log(data);
             $scope.kechengs=response.data;
         }, function errorCallback(response){
 
         });
-    //     $.ajax({
-    //      type: "GET",
-    //      url: ip+"/DomainAPI/getDomain",
-    //      data: {},
-    //      dataType: "json",
-    //      //async:false,
-    //      success: function(data){
-    //         $scope.kechengs=data;
-    //         $scope.$apply();
-
-    //     }
-    // });
     
     }
 
@@ -74,18 +62,6 @@ app.controller('myCon',function($scope,$http){
         }, function errorCallback(data){
 
         });
-    //     $.ajax({
-    //      type: "GET",
-    //      url: ip+"/DomainAPI/countClassNum",
-    //      data: {},
-    //      dataType: "json",
-    //      async:false,
-    //      success: function(data){
-    //         $('#ClassNum').text("系统中目前共有"+data.ClassNum+"门课程");
-    //         $scope.$apply();
-
-    //     }
-    // });
     }
 
     $scope.tianjiaClass=function(){
@@ -105,19 +81,6 @@ app.controller('myCon',function($scope,$http){
         });
     console.log(newclass);
 
-    // $.ajax({
-    //          type: "GET",
-    //          url: ip+"/DomainAPI/createClass",
-    //          data: {ClassName:$("input[name='ClassName']").val()},
-    //          dataType: "json",
-    //          //async:false,
-    //          success: function(data){
-    //                     // console.log(data);
-    //                      alert(data.success);
-    //                      $scope.showClass();
-    //                      $scope.showNum();
-    //                   }
-    //      });
     }
 
     $scope.updataClassName=function(){
@@ -131,18 +94,6 @@ app.controller('myCon',function($scope,$http){
         }, function errorCallback(response){
 
         });
-        // $.ajax({
-        //      type: "GET",
-        //      url: ip+"/DomainAPI/updateClassName",
-        //      data: {ClassName:nowOperateClass,NewClassName:$("input[name='NewClassName']").val()},
-        //      dataType: "json",
-        //      async:false,
-        //      success: function(data){
-        //                  //console.log(data);
-        //                  alert(data.success);
-        //                  $scope.showClass();
-        //               }
-        //  });
     }
 
     $scope.queryByKeyword=function(){
@@ -173,37 +124,6 @@ app.controller('myCon',function($scope,$http){
         }, function errorCallback(response){
 
         });
-
-    // $.ajax({
-    //          type: "GET",
-    //          url: ip+"/DomainAPI/queryKeyword",
-    //          data: {Keyword:$("input[name='KeyWord']").val()},
-    //          dataType: "json",
-    //          async:false,
-    //          success: function(data){
-    //                     // console.log(data);
-    //                      var subjectArray=[];
-    //                      var topicArray=[];
-    //                      var facetArray=[];
-    //                      for(var i=0;i<data.length;i++){
-    //                         if(data[i].Type=="Class"){
-                                
-    //                             subjectArray.push(data[i]);
-    //                         }
-    //                         else if(data[i].Type=="Term"){
-    //                             topicArray.push(data[i]);
-    //                         }
-    //                         else{
-    //                             facetArray.push(data[i]);
-    //                         }
-    //                      }
-                         
-    //                      $scope.querysubjects=subjectArray;
-    //                      $scope.querytopics=topicArray;
-    //                      $scope.queryfacets=facetArray;
-
-    //                   }
-    //      });
     }
 
     $scope.jumpClass=function(a){
@@ -211,7 +131,7 @@ app.controller('myCon',function($scope,$http){
         var res=[];
         $http({
             method:'GET',
-            url:ip+"/DomainAPI/getDomain"
+            url:ip+"/DomainAPI/getDomainManage"
         }).then(function successCallback(response){
             for(var i=0;i<response.data.length;i++){
                 if(response.data[i].ClassName==a){
@@ -223,21 +143,6 @@ app.controller('myCon',function($scope,$http){
 
         });
 
-    //     $.ajax({
-    //      type: "GET",
-    //      url: ip+"/DomainAPI/getDomain",
-    //      data: {},
-    //      dataType: "json",
-    //      async:false,
-    //      success: function(data){
-    //         for(var i=0;i<data.length;i++){
-    //             if(data[i].ClassName==a){
-    //                 res.push(data[i]);
-    //             }
-    //         }
-    //         $scope.kechengs=res;
-    // }
-    // });
 }
 
 $scope.jumpTopic=function(a,b){
@@ -266,7 +171,7 @@ $scope.jumpFacet=function(a,b,c,d){
 //        console.log(a);
         $http({
             method:'GET',
-            url:ip+"/DomainAPI/getDomain"
+            url:ip+"/DomainAPI/getDomainManage"
         }).then(function successCallback(response){
            //console.log(response.data.length);
             for(var i=0;i<response.data.length;i++){
@@ -332,31 +237,6 @@ $scope.jumpFacet=function(a,b,c,d){
         }, function errorCallback(response){
 
         });
-
-
-        // $.ajax({
-        //      type: "GET",
-        //      url: ip+"/DomainAPI/getDomain",
-        //      data: {},
-        //      dataType: "json",
-        //      async:false,
-        //      success: function(data){
-        //                  for(var i=0;i<data.length;i++){
-        //                     if(data[i].ClassName==a){
-        //                         nowOperateClass=a;
-        //                         nowFirstFacetNum=data[i].FirstFacetNum;
-        //                         nowSecondFacetNum=data[i].SecondFacetNum;
-        //                         nowThirdFacetNum=data[i].ThirdFacetNum;
-        //                         nowTextFragmentNum=data[i].TextFragmentNum;
-        //                         nowImageFragmentNum=data[i].ImageFragmentNum;
-        //                     }
-        //                  }
-        //               }
-        //  });
-        
-
-
-
     
 }
 

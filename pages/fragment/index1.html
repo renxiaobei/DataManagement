@@ -20,42 +20,6 @@
 
 
   
-  <style>
-    .drag-object, [ng-drop] [ng-drag]{
-        position: relative;
-        display: block;
-    }
-    .drag-object [ng-drag]{
-        position: absolute;
-        top:0; left:0;
-        padding: 0;
-        margin: 0;
-    }
-    [ng-drop]{
-        background: rgba(255,255,255, 0.5);
-        width: 90%;
-        height: 85%;
-        display: block;
-        margin:20px auto;
-        position: relative;
-    }
-    [ng-drag].dragging{
-        opacity: 0.5;
-        
-    }
-    [ng-drop].drag-enter{
-        border:solid 5px #3c8dbc;
-    }
-    [ng-drop] div{
-        position: relative;
-        z-index: 2;
-    }
-
-
-  </style>
-
-
-  
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -168,7 +132,7 @@
                    <ul uib-collapse="isCollapsed" class="level2" ng-repeat="y in x.Facet1">
                     <div class="list-group-item " style="background-color:#3c8dbc;margin:2px 0;">
                      <a id={{x.TermName}}_{{y.Facet1Name}}_choose style="color:white;cursor:pointer"
-                     ng-click="getfacet1fragment(x.ClassName,x.TermName,y.Facet1Name);showFacetTreeWithLeaves(x.ClassName,x.TermName);">{{y.Facet1Name}}</a>
+                     ng-click="getfacet1fragment(x.ClassName,x.TermName,y.Facet1Name);showFacetTreeWithLeaves(x.ClassName,x.TermName);"  ondrop="dropFacet1fragment(event,this.id)" ondragover="allowDrop(event)">{{y.Facet1Name}}</a>
                      <a id={{x.TermName}}_{{y.Facet1Name}}_a class="fa fa-fw fa-chevron-left" style="float:right;color:white;cursor:pointer" ng-click="isCollapsedchildren = !isCollapsedchildren;getfacet1href(x.ClassName,x.TermName,y.Facet1Name)"></a>
                    </div>
 
@@ -176,13 +140,13 @@
                    <ul uib-collapse="isCollapsedchildren" class="level3"
                    ng-repeat="z in y.Facet2">
                    <div class="list-group-item " style="background-color: #6495ED ;margin:2px 0;">
-                     <a  id={{x.TermName}}_{{y.Facet1Name}}_{{z.Facet2Name}}_choose style="color:white;cursor:pointer" ng-click="getfacet2fragment(x.ClassName,x.TermName,z.Facet2Name);showFacetTreeWithLeaves(x.ClassName,x.TermName);">{{z.Facet2Name}}</a>
+                     <a  id={{x.TermName}}_{{y.Facet1Name}}_{{z.Facet2Name}}_choose style="color:white;cursor:pointer" ng-click="getfacet2fragment(x.ClassName,x.TermName,y.Facet1Name,z.Facet2Name);showFacetTreeWithLeaves(x.ClassName,x.TermName);" ondrop="dropFacet2fragment(event,this.id)" ondragover="allowDrop(event)">{{z.Facet2Name}}</a>
                      <a class="fa fa-fw fa-chevron-left" style="float:right;color:white;cursor:pointer" id={{x.TermName}}_{{y.Facet1Name}}_{{z.Facet2Name}}_a ng-click="isCollapsedchildren2 = !isCollapsedchildren2;getfacet2href(x.ClassName,x.TermName,y.Facet1Name,z.Facet2Name)"></a>
                    </div>
                    <ul uib-collapse="isCollapsedchildren2" class="level4"
                    ng-repeat="w in z.Facet3">
-                   <div class="list-group-item " style="background-color:#5CACEE ;margin:2px 0;color:white;cursor:pointer">
-                     <div  id={{x.TermName}}_{{y.Facet1Name}}_{{z.Facet2Name}}_{{w.Facet3Name}}_a style="cursor: pointer" ng-click="getfacet3(x.ClassName,x.TermName,w.Facet3Name);showFacetTreeWithLeaves(x.ClassName,x.TermName);">{{w.Facet3Name}}</div>
+                   <div class="list-group-item " style="background-color:#5CACEE ;margin:2px 0;color:white;cursor:pointer" >
+                     <div id={{x.TermName}}_{{y.Facet1Name}}_{{z.Facet2Name}}_{{w.Facet3Name}}_a style="cursor: pointer" ng-click="getfacet3(x.ClassName,x.TermName,w.Facet3Name);showFacetTreeWithLeaves(x.ClassName,x.TermName);" ondrop="dropFacet3fragment(event,this.id)" ondragover="allowDrop(event)">{{w.Facet3Name}}</div>
                    </div>
                    </ul>
 
@@ -199,20 +163,41 @@
           </div>
 
           <div class="col-md-8"  style="margin-left: -20px;">
-          <div class="row">
-            <div class="box box-primary box-solid">
+            <div class="row">
+
+            <div class="col-md-6">
+                <div class="box box-primary box-solid">
                   <div class="box-header with-border">
                   <h3 class="box-title">未装配碎片</h3>
-                  
+                  </div>
+                  <div id="fragmentUnaddDiv" class="box-body" style="display: block;overflow-y: auto">
 
+
+                    <div class="box box-primary" ng-repeat="unaddfragment in unaddfragments"  
+                    id={{unaddfragment.FragmentID}}_unadd draggable="true"  style="border:2px solid #428bca;width:45%;float:left;margin:5px;overflow-y: auto;cursor:move" ondragstart="drag(event,this.id)">
+                      <div class="box-body" style="height:150px;overflow: hidden" ng-bind-html="unaddfragment.FragmentContent">
+                      </div>
+                        <div class="box-footer">
+                          <button type="button" class="btn btn-box-tool" data-widget="remove" ng-click="deleteUnaddFragment(unaddfragment.FragmentID)"><i class="fa fa-times"></i></button>
+                        </div>
+                      </div>
 
                   </div>
-                  <div id="fragmentUnaddDiv" class="box-body" style="display: block;overflow: scroll">
-                  <!-- <div id="fragmentUnaddDiv" class="box-body"> -->
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="box box-primary box-solid">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">添加碎片</h3>
+                    </div>
+                    <div id="fragmentAddDiv" class="box-body" style="display: block;">
+                    <button class="btn btn-primary" onclick="choosetype()">添加碎片</button>
+                    </div>
+                  </div>
 
 
-
-                  <button class="btn btn-primary" onclick="choosetype()">添加碎片</button>
 
                   <div class="modal fade" id="fragmentModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -225,8 +210,8 @@
                             添加碎片
                           </h4>
                         </div>
-                        <div class="modal-body"  style="height:400px;width:100%;">
-                      <div id="wang" style="height:250px;">
+                        <div class="modal-body"  style="height:400px;width:100%">
+                      <div id="wang" style="height:250px">
                         <p>请添加碎片...</p>
                       </div>
                        </div>
@@ -240,43 +225,43 @@
                     </div>
                   </div>
 
-                  <div ng-repeat="unaddfragment in unaddfragments"  id={{unaddfragment.FragmentID}}_unadd>
-                  <div class="box box-primary drag-object"  style="border:2px solid #428bca;width:20%;float:left;margin:5px;overflow-y: auto;cursor:move;" ng-drag="true" ng-drag-data="unaddfragment" ng-drag-success="dragFragment($data,$event)">
-                    <div class="box-body" style="height:150px;overflow: hidden" ng-bind-html="unaddfragment.FragmentContent">
-                    </div>
-                    <div class="box-footer">
-                      <button type="button" class="btn btn-box-tool" data-widget="remove" ng-click="deleteUnaddFragment(unaddfragment.FragmentID)"><i class="fa fa-times"></i></button>
-                    </div>
-                  </div>
-                </div>
 
-              </div>
+
                 </div>
-          </div>
-          <div class="row">
-            <div class="box box-primary box-solid" style="width:99%">
-            <div class="box-header with-border">
-              <h3 class="box-title" id="fragmenttopic">所选主题/分面下碎片</h3>
-            </div>
-            <div id="fragmentInfoDiv" class="box-body" style="display: block;overflow-y: auto" >
-              <div ng-drop="true" ng-drop-success="dropFacetFragment($data,$event)">
-                <div class="box box-primary" ng-repeat="fragment in fragments" style="border:2px solid #428bca;width:20%;float:left;margin:1%" >
-                  <div class="box-body" style="height:150px;overflow:hidden" ng-bind-html="fragment.FragmentContent">
-                  </div>
-                  <div class="box-footer">
-                    <button type="button" class="btn btn-box-tool" data-widget="remove" ng-click="deleteFragment(fragment.FragmentID)"><i class="fa fa-times"></i></button>
+                <div class="row">
+                  <div class="box box-primary box-solid">
+                    <div class="box-header with-border">
+                    <h3 id="topictree" class="box-title">所选主题主题树</h3>
+                    </div>
+                    <div id="fragmentTreeDiv" class="box-body" style="display: block;">
+                      <!--add tree with leaves here-->
+                    </div>
                   </div>
                 </div>
               </div>
-
+              
             </div>
-          </div>
-          </div>
-            
           </div>
           
         </div>
-        
+        <div class="row" style="margin-left: 10px">
+        <div class="box box-primary box-solid" style="width:99%">
+            <div class="box-header with-border">
+              <h3 class="box-title" id="fragmenttopic">所选主题/分面下碎片</h3>
+            </div>
+            <div id="fragmentInfoDiv" class="box-body" style="display: block;overflow-y: auto">
+
+            <div class="box box-primary" ng-repeat="fragment in fragments" style="border:2px solid #428bca;width:15%;float:left;margin:1%">
+                <div class="box-body" style="height:150px;overflow:hidden" ng-bind-html="fragment.FragmentContent">
+                </div>
+                <div class="box-footer">
+                  <button type="button" class="btn btn-box-tool" data-widget="remove" ng-click="deleteFragment(fragment.FragmentID)"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -353,7 +338,7 @@
 
 <script src="js/fragment.js"></script>
 <script src="js/function.js"></script>
-<script src="js/ngDraggable.js"></script>
+
 <script src="js/tree.js"></script>
 
 
